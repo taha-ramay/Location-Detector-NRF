@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+<<<<<<< HEAD
 #include <zephyr/types.h>
 #include <stddef.h>
 #include <errno.h>
@@ -136,3 +137,12 @@ int main(void)
 	start_scan();
 	return 0;
 }
+=======
+#include "DisplayManager.h"
+#include "common.h"
+#include <errno.h>
+#include <stddef.h>
+#include <zephyr/kernel.h>
+#include <zephyr/types.h>
+int main(void) { return 0; }
+>>>>>>> c2162a0 (Initial commit)
