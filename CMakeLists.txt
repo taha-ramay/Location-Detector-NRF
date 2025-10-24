@@ -6,10 +6,6 @@ project(NRF-Code)
 
 target_sources(app PRIVATE
   src/main.c
-<<<<<<< HEAD
-)
-
-=======
   src/Lcd_Display/DisplayManager.c
 
   # src/motors/motor.c
@@ -21,5 +17,4 @@ target_include_directories(app PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/common
 )
 # Adding Extra Library
->>>>>>> c2162a0 (Initial commit)
 zephyr_library_include_directories(${ZEPHYR_BASE}/samples/bluetooth)
