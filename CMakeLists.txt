@@ -7,13 +7,13 @@ project(NRF-Code)
 target_sources(app PRIVATE
   src/main.c
   src/Lcd_Display/DisplayManager.c
-
+  src/Buzzer/Buzzer_Manager.c
   # src/motors/motor.c
   # src/common/common.c
 )
 target_include_directories(app PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Lcd_Display
-  # ${CMAKE_CURRENT_SOURCE_DIR}/src/motors
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/Buzzer
   ${CMAKE_CURRENT_SOURCE_DIR}/src/common
 )
 # Adding Extra Library
