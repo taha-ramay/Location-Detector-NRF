@@ -5,7 +5,7 @@
 #define SECURITY_KEY 0xABAB // shared known key for simple validation
 #define OUT_OF_RANGE_TIMEOUT_MS 5000
 #define NUM_ALLOWED_IDS 4
-#define RSSI_Limit -40
+#define RSSI_Limit -60
 #define PCF98574_Address (0x27 << 1)
 // commands
 #define LCD_CLEARDISPLAY 0x01

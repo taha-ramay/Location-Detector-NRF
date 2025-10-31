@@ -7,7 +7,7 @@
 
 struct tracked_device {
   bt_addr_le_t tracked_device;
-  int8_t last_rssi;
+  int16_t last_rssi;
   int64_t last_seen_ms;
   bool device_tracked;
 };

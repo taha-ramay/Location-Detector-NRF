@@ -19,6 +19,7 @@ LOG_MODULE_REGISTER(Main_Debug, LOG_LEVEL_DBG);
 
 int main(void) {
   LOG_INF("Booting");
+  LCD_init();
   bluetooth_Init();
   return 0;
 }
