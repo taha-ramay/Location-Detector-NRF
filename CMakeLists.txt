@@ -8,13 +8,16 @@ target_sources(app PRIVATE
   src/main.c
   src/Lcd_Display/DisplayManager.c
   src/Buzzer/Buzzer_Manager.c
-  # src/motors/motor.c
+  src/BluetoothManager/BluetoothManager.c
   # src/common/common.c
 )
 target_include_directories(app PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Lcd_Display
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Buzzer
   ${CMAKE_CURRENT_SOURCE_DIR}/src/common
+
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/BluetoothManager
+
 )
 # Adding Extra Library
 zephyr_library_include_directories(${ZEPHYR_BASE}/samples/bluetooth)

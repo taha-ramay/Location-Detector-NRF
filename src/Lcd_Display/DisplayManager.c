@@ -5,10 +5,6 @@ static const struct i2c_dt_spec pcf8574 =
     I2C_DT_SPEC_GET(DT_NODELABEL(mydisplay));
 LOG_MODULE_REGISTER(Display_Debug, LOG_LEVEL_DBG);
 void LCD_init() {
-  // LOG_INF("nRF Connect SDK Fundamentals");
-  // LOG_DBG("A log message in debug level");
-  // LOG_WRN("A log message in warning level!");
-  // LOG_ERR("A log message in Error level!");
 
   if (!i2c_is_ready_dt(&pcf8574)) {
     LOG_ERR("LCD is not ready!");
