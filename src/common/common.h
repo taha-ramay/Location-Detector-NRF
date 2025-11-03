@@ -4,8 +4,10 @@
 // Bluetooth Macros
 #define SECURITY_KEY 0xABAB // shared known key for simple validation
 #define OUT_OF_RANGE_TIMEOUT_MS 5000
+#define check_TIMEOUT_MS 3000
+
 #define NUM_ALLOWED_IDS 4
-#define RSSI_Limit -60
+#define RSSI_Limit -50
 #define PCF98574_Address (0x27 << 1)
 // commands
 #define LCD_CLEARDISPLAY 0x01

@@ -8,11 +8,16 @@ uint64_t last_time;
 LOG_MODULE_REGISTER(Bluetooth_Debug, LOG_LEVEL_DBG);
 K_THREAD_STACK_DEFINE(range_stack, 1024);
 static struct k_thread range_thread;
-struct tracked_device trackedDevices[4];
+// struct tracked_device trackedDevices[4];
+struct tracked_device trackedDevices[4] = {0};
+
 static const uint8_t allowed_ids[NUM_ALLOWED_IDS] = {0x01, 0x02, 0x03, 0x04};
 static bool id_is_allowed(uint8_t id) {
   for (uint8_t i = 0; i < NUM_ALLOWED_IDS; i++)
     if (id == allowed_ids[i]) {
+      if (trackedDevices[id - 1].device_tracked == true) {
+        return false;
+      }
       trackedDevices[i].device_tracked = true;
       return true;
     }
@@ -42,11 +47,11 @@ void range_monitor_thread(void) {
         // LOG_WRN("Device %s out of range!", addr_str);
         k_mutex_lock(&tracked_mutex, K_FOREVER);
         trackedDevices[0].device_tracked = false;
-        // trackedDevices[0].last_seen_ms = k_uptime_get();
 
         k_mutex_unlock(&tracked_mutex);
         // LOG_WRN("time of check %d", trackedDevices[0].last_seen_ms / 1000);
         LOG_WRN("Last RSSI is %d", trackedDevices[0].last_rssi);
+        LCD_SendString("device 1 out of range");
 
         LOG_WRN("Device 1 out of range");
       }
@@ -62,7 +67,8 @@ void range_monitor_thread(void) {
 
         trackedDevices[1].device_tracked = false;
         k_mutex_unlock(&tracked_mutex);
-
+        LOG_WRN("Last RSSI is %d", trackedDevices[0].last_rssi);
+        LCD_SendString("device 2 out of range");
         LOG_WRN("Device 2 out of range");
       }
     }
@@ -77,6 +83,7 @@ void range_monitor_thread(void) {
 
         trackedDevices[2].device_tracked = false;
         k_mutex_unlock(&tracked_mutex);
+        LCD_SendString("device 3 out of range");
 
         LOG_WRN("Device 3 out of range");
       }
@@ -92,6 +99,7 @@ void range_monitor_thread(void) {
 
         trackedDevices[3].device_tracked = false;
         k_mutex_unlock(&tracked_mutex);
+        LCD_SendString("device 4 out of range");
 
         LOG_WRN("Device 4 out of range");
       }
@@ -131,12 +139,6 @@ static void scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
       return;
     }
     uint8_t id = data[2] - 1;
-
-    if (id >= ARRAY_SIZE(trackedDevices)) {
-      LOG_INF("the id is %d", id);
-      LOG_ERR("Unknown device trying to connect");
-      return;
-    }
     k_mutex_lock(&tracked_mutex, K_FOREVER);
 
     trackedDevices[id].device_tracked = true;
@@ -144,7 +146,8 @@ static void scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
     trackedDevices[id].last_seen_ms = k_uptime_get();
     trackedDevices[id].tracked_device = *addr;
     k_mutex_unlock(&tracked_mutex);
-    // LOG_WRN("tracking info of device");
+    LCD_SendString("Device 1 in range");
+
     // LOG_INF("Device [%d] tracked = %s | RSSI = %d dBm | Last seen = %lld ms",
     //         id, trackedDevices[id].device_tracked ? "true" : "false",
     //         trackedDevices[id].last_rssi, trackedDevices[id].last_seen_ms);

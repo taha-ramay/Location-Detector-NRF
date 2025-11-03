@@ -3,7 +3,7 @@ static uint8_t cursor_col = 0;
 static uint8_t cursor_row = 0;
 static const struct i2c_dt_spec pcf8574 =
     I2C_DT_SPEC_GET(DT_NODELABEL(mydisplay));
-LOG_MODULE_REGISTER(Display_Debug, LOG_LEVEL_DBG);
+LOG_MODULE_REGISTER(Display_Debug, 0);
 void LCD_init() {
 
   if (!i2c_is_ready_dt(&pcf8574)) {
