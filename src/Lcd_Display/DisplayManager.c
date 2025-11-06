@@ -48,11 +48,11 @@ void LCD_Clear() {
   LCD_SendByte(0x01, 0); // Clear display command
   k_msleep(2);
 }
-void send(uint8_t value, uint8_t mode) {}
+void lcd_send(uint8_t value, uint8_t mode) {}
 void hal_transmit(uint8_t data, uint8_t length) {}
 void set_4_bit_mode() {
   uint8_t val = 0x03;
-  send(val, sizeof(val));
+  lcd_send(val, sizeof(val));
 }
 void LCD_SendNibble(uint8_t nibble, uint8_t rs) {
   // uint8_t data = (nibble & 0xF0) | LCD_BACKLIGHT | rs;

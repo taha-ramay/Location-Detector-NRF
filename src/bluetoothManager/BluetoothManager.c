@@ -10,6 +10,9 @@ K_THREAD_STACK_DEFINE(range_stack, 1024);
 static struct k_thread range_thread;
 // struct tracked_device trackedDevices[4];
 struct tracked_device trackedDevices[4] = {0};
+uint8_t helo = 3;
+int a = 4;
+int c = 5;
 
 static const uint8_t allowed_ids[NUM_ALLOWED_IDS] = {0x01, 0x02, 0x03, 0x04};
 static bool id_is_allowed(uint8_t id) {

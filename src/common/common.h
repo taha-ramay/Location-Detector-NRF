@@ -57,4 +57,11 @@
 #define En B00000100 // Enable bit
 #define Rw B00000010 // Read/Write bit
 #define Rs B00000001 // Register select bit
+
+// Network socket vals
+
+#define SERVER_IP "192.168.1.200"
+#define SERVER_PORT 5000
+#define OUT_OF_RANGE_TIMEOUT_network 3000
+
 #endif
