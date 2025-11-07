@@ -4,6 +4,8 @@
 // LOG_WRN("A log message in warning level!");
 // LOG_ERR("A log message in Error level!");
 static struct k_mutex tracked_mutex;
+char addr_str[] = "24:0A:C4:45:88:56";
+
 uint64_t last_time;
 LOG_MODULE_REGISTER(Bluetooth_Debug, LOG_LEVEL_DBG);
 K_THREAD_STACK_DEFINE(range_stack, 1024);
@@ -38,7 +40,7 @@ static bool check_security_payload(const uint8_t *data) {
 }
 
 /* ---------- Periodic Tracker ---------- */
-void range_monitor_thread(void) {
+void range_monitor_thread(void *p1, void *p2, void *p3) {
 
   while (1) {
     if (trackedDevices[0].device_tracked == true) {
@@ -114,8 +116,14 @@ void range_monitor_thread(void) {
 /* ---------- Scan Callback ---------- */
 static void scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
                     struct net_buf_simple *buf) {
-  // Parse AD elements
-  if (rssi < -60) {
+  if (adv_type != BT_GAP_ADV_TYPE_ADV_NONCONN_IND) {
+    return;
+  }
+  bt_addr_t required_addr;
+  bt_addr_from_str("24:0A:C4:45:88:56", &required_addr);
+  if (bt_addr_cmp(&addr->a, &required_addr) == 0) {
+    LOG_INF("in range our required address");
+  } else {
     return;
   }
   // uint8_t *data = buf->data;
@@ -128,35 +136,46 @@ static void scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
   //   LOG_INF("data[%d] = 0x%02X", i, data[i]);
   // }
   if (rssi > RSSI_Limit) {
-    uint8_t *data = buf->data;
-
-    if (buf->len > 1) {
-    } else {
-      LOG_INF("data not present");
+    uint8_t *data = &(buf->data[2]);
+    unsigned char bledata[16];
+    memset(bledata, 0x00, sizeof(bledata));
+    if (!aes_cfb128(data, 16, bledata)) {
+      LOG_INF("decryption failed, unknown device");
       return;
     }
-    if (check_security_payload(data)) {
-      // LOG_INF("valid node present");
-    } else {
-      LOG_INF("invalid node present");
-      return;
+    for (int i = 0; i < 3; i++) {
+      LOG_INF("%d ", bledata[i]);
     }
-    uint8_t id = data[2] - 1;
-    k_mutex_lock(&tracked_mutex, K_FOREVER);
+    char addr_str[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(addr, addr_str, sizeof(addr_str));
+    LOG_INF("Address: %s ", addr_str);
+    k_msleep(5000); // Wait for LCD to power up
 
-    trackedDevices[id].device_tracked = true;
-    trackedDevices[id].last_rssi = rssi;
-    trackedDevices[id].last_seen_ms = k_uptime_get();
-    trackedDevices[id].tracked_device = *addr;
-    k_mutex_unlock(&tracked_mutex);
-    LCD_SendString("Device 1 in range");
+    // if (buf->len > 1) {
+    // } else {
+    //   LOG_INF("data not present");
+    //   return;
+    // }
+    // if (check_security_payload(data)) {
+    //   // LOG_INF("valid node present");
+    // } else {
+    //   LOG_INF("invalid node present");
+    //   return;
+    // }
+    // uint8_t id = data[2] - 1;
+    // k_mutex_lock(&tracked_mutex, K_FOREVER);
+
+    // trackedDevices[id].device_tracked = true;
+    // trackedDevices[id].last_rssi = rssi;
+    // trackedDevices[id].last_seen_ms = k_uptime_get();
+    // trackedDevices[id].tracked_device = *addr;
+    // k_mutex_unlock(&tracked_mutex);
+    // LCD_SendString("Device 1 in range");
 
     // LOG_INF("Device [%d] tracked = %s | RSSI = %d dBm | Last seen = %lld ms",
     //         id, trackedDevices[id].device_tracked ? "true" : "false",
     //         trackedDevices[id].last_rssi, trackedDevices[id].last_seen_ms);
-    // char addr_str[BT_ADDR_LE_STR_LEN];
-    // bt_addr_le_to_str(addr, addr_str, sizeof(addr_str));
-    // LOG_INF("Address: %s ", addr_str);
+
     return;
   } else {
     if (k_uptime_get() - last_time > OUT_OF_RANGE_TIMEOUT_MS) {
@@ -190,6 +209,7 @@ void bluetooth_Init() {
     LOG_ERR("Bluetooth init failed (err %d)\n", err);
     return;
   }
+
   err = bt_le_scan_start(&scan_param, scan_cb);
   if (err) {
     LOG_ERR("Scan start failed (%d)", err);

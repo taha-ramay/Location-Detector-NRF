@@ -12,6 +12,7 @@ target_sources(app PRIVATE
   src/BluetoothManager/BluetoothManager.c
   src/Network_Manager/Network_Manager.c
   src/Network_Manager/Network_Manager.c
+  src/MbedTlsManager/MbedTlsManager.c
 
 )
 target_include_directories(app PRIVATE
@@ -20,9 +21,12 @@ target_include_directories(app PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/common
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Network_Manager
   ${CMAKE_CURRENT_SOURCE_DIR}/src/BluetoothManager
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/MbedTlsManager
+
+  # ${CMAKE_CURRENT_SOURCE_DIR}/src/BluetoothManager
 
 )
 # Adding Extra Library
 zephyr_library_include_directories(${ZEPHYR_BASE}/samples/bluetooth)
 # zephyr_include_directories(drivers/ethernet)
-zephyr_library_include_directories(${ZEPHYR_BASE}/drivers/ethernet)
+# zephyr_library_include_directories(${ZEPHYR_BASE}/drivers/ethernet)

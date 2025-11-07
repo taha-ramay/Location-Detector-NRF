@@ -7,7 +7,7 @@
 #define check_TIMEOUT_MS 3000
 
 #define NUM_ALLOWED_IDS 4
-#define RSSI_Limit -50
+#define RSSI_Limit -100
 #define PCF98574_Address (0x27 << 1)
 // commands
 #define LCD_CLEARDISPLAY 0x01

@@ -6,7 +6,7 @@ K_THREAD_STACK_DEFINE(network_stack, 4096);
 LOG_MODULE_REGISTER(Network_Debug);
 uint64_t start_time;
 
-void network_monitor_thread(void) {
+void network_monitor_thread(void *p1, void *p2, void *p3) {
   LOG_INF("network_monitor_thread setting");
   while (1) {
     if (k_uptime_get() - start_time > OUT_OF_RANGE_TIMEOUT_network) {
