@@ -63,5 +63,5 @@
 #define SERVER_IP "192.168.1.200"
 #define SERVER_PORT 5000
 #define OUT_OF_RANGE_TIMEOUT_network 3000
-
+#define Connection_check_Time 5000
 #endif

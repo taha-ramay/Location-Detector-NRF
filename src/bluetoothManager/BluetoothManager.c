@@ -149,6 +149,7 @@ static void scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
     char addr_str[BT_ADDR_LE_STR_LEN];
     bt_addr_le_to_str(addr, addr_str, sizeof(addr_str));
     LOG_INF("Address: %s ", addr_str);
+    enqueue_data(bledata, 3);
     k_msleep(5000); // Wait for LCD to power up
 
     // if (buf->len > 1) {
@@ -172,9 +173,11 @@ static void scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
     // k_mutex_unlock(&tracked_mutex);
     // LCD_SendString("Device 1 in range");
 
-    // LOG_INF("Device [%d] tracked = %s | RSSI = %d dBm | Last seen = %lld ms",
+    // LOG_INF("Device [%d] tracked = %s | RSSI = %d dBm | Last seen = %lld
+    // ms",
     //         id, trackedDevices[id].device_tracked ? "true" : "false",
-    //         trackedDevices[id].last_rssi, trackedDevices[id].last_seen_ms);
+    //         trackedDevices[id].last_rssi,
+    //         trackedDevices[id].last_seen_ms);
 
     return;
   } else {

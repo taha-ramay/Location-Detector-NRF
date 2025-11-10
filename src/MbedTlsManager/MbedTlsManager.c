@@ -24,7 +24,6 @@ int aes_cfb128(unsigned char *input, int crypt_len, unsigned char *output) {
   mbedtls_aes_context aes;
   mbedtls_aes_init(&aes);
   int ret = mbedtls_aes_setkey_enc(&aes, sharedKey, 128);
-  compute_hmac_sha256();
   if (ret != 0) {
     LOG_ERR("setkey_enc failed: %d", ret);
     mbedtls_aes_free(&aes);

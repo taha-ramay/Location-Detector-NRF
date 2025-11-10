@@ -13,6 +13,9 @@ target_sources(app PRIVATE
   src/Network_Manager/Network_Manager.c
   src/Network_Manager/Network_Manager.c
   src/MbedTlsManager/MbedTlsManager.c
+  src/NonBlockdelay/NonBlockdelay.c
+  src/Pressuresensor/Pressuresensor.c
+
 
 )
 target_include_directories(app PRIVATE
@@ -22,6 +25,8 @@ target_include_directories(app PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Network_Manager
   ${CMAKE_CURRENT_SOURCE_DIR}/src/BluetoothManager
   ${CMAKE_CURRENT_SOURCE_DIR}/src/MbedTlsManager
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/NonBlockdelay
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/Pressuresensor
 
   # ${CMAKE_CURRENT_SOURCE_DIR}/src/BluetoothManager
 

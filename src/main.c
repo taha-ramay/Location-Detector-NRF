@@ -17,7 +17,8 @@ int main(void) {
   // LCD_init();
 
   generateSharedKey("shared key1");
-  k_msleep(5000); // Wait for LCD to power up
+  k_msleep(3000); // Wait for LCD to power up
+  // LCD_SendString("Connection lost with server,restart");
 
   bluetooth_Init();
   network_init();

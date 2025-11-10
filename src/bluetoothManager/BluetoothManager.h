@@ -2,6 +2,7 @@
 #define BluetoothManager_H
 #include "DisplayManager.h"
 #include "MbedTlsManager.h"
+#include "Network_Manager.h"
 #include "common.h"
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gap.h>
