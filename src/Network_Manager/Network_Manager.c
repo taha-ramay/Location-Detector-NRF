@@ -3,7 +3,10 @@ int sock;
 struct sockaddr_in server;
 static struct k_thread network_thread;
 K_THREAD_STACK_DEFINE(network_stack, 4096);
+struct k_fifo my_fifo;
+
 LOG_MODULE_REGISTER(Network_Debug);
+int ret;
 typedef struct {
   uint64_t connectionStatusCheck;
   bool data_queued;
@@ -28,7 +31,22 @@ void network_monitor_thread(void *p1, void *p2, void *p3) {
   memset(buf, 0, sizeof(buf));
   while (1) {
     // LOG_INF("i am inside thread");
+    ret = recv(sock, buf, sizeof(buf) - 1, MSG_DONTWAIT);
+    if (ret > 0) {
+      buf[ret] = '\0'; // Null-terminate for string comparison
+      LOG_INF("Received command: %s", buf);
 
+      if (strstr((char *)buf, "motor_on")) {
+        LOG_INF("Motor ON command received");
+        motor_on();
+        memset(buf, 0, sizeof(buf));
+      } else if (strstr((char *)buf, "motor_off")) {
+        LOG_INF("Motor OFF command received");
+        motor_off();
+        memset(buf, 0, sizeof(buf));
+      } else {
+      }
+    }
     if (commFlags.data_queued) {
       if (commFlags.senddata) {
 
@@ -78,13 +96,14 @@ void network_monitor_thread(void *p1, void *p2, void *p3) {
         commFlags.connectionStatusCheck = k_uptime_get();
       }
     }
+
     k_msleep(100); // Wait for LCD to power up
   }
 }
 bool wait_for_ack(int sock) {
   // LOG_WRN("waiting for ack");
-  int ret =
-      recv(sock, buf + total_len, sizeof(buf) - total_len - 1, MSG_DONTWAIT);
+  // int ret =
+  //     recv(sock, buf + total_len, sizeof(buf) - total_len - 1, MSG_DONTWAIT);
   // LOG_WRN("after receving ack");
   // LOG_INF("The value of ret is %d", ret);
   if (ret > 0) {
@@ -198,6 +217,8 @@ bool wait_for_ack21(int sock, int timeout_ms) {
 
 void network_init() {
   LOG_INF("Starting network ");
+  k_fifo_init(&my_fifo);
+
   // Get default network interface
   struct net_if *iface = net_if_get_default();
   if (!iface) {
@@ -239,13 +260,16 @@ void network_init() {
   }
   LOG_INF("Connected!");
   commFlags.ConnectionStatus = true;
+  serverdata = malloc(64);
+
   k_thread_create(&network_thread, network_stack,
                   K_THREAD_STACK_SIZEOF(network_stack), network_monitor_thread,
                   NULL, NULL, NULL, 7, 0, K_NO_WAIT);
 }
 void enqueue_data(uint8_t *data, uint16_t data_len) {
   LOG_INF("inside enqueue data");
-
+  LOG_INF("the data enqueued is");
+  LOG_HEXDUMP_INF(data, data_len, "Sample Data!");
   if (commFlags.ConnectionStatus) {
     LOG_INF("Available");
   } else {
@@ -253,10 +277,11 @@ void enqueue_data(uint8_t *data, uint16_t data_len) {
 
     return;
   }
+  LOG_INF("data in enqueue %s\n", data);
 
   if (!commFlags.data_queued) {
     LOG_INF("Sending data to the server");
-    serverdata = malloc(data_len);
+    memset(serverdata, 0, sizeof(serverdata));
     if (serverdata == NULL) {
       LOG_ERR("malloc failed");
       return;
@@ -276,15 +301,15 @@ int send_data(uint8_t *data, uint16_t data_len) {
 
   uint16_t len_be = htons(data_len);
 
-  int ret = send(sock, &len_be, sizeof(len_be), 0);
+  // int ret = send(sock, &len_be, sizeof(len_be), 0);
 
-  if (ret < 0) {
-    LOG_ERR("Failed to send length: %d", errno);
-    return 0;
-  }
-  k_msleep(25); // Wait for LCD to power up
+  // if (ret < 0) {
+  //   LOG_ERR("Failed to send length: %d", errno);
+  //   return 0;
+  // }
+  // k_msleep(25); // Wait for LCD to power up
 
-  ret = send(sock, data, data_len, 0);
+  int ret = send(sock, data, data_len, 0);
   if (ret < 0) {
     LOG_ERR("Failed to send message: %d", errno);
     return 0;

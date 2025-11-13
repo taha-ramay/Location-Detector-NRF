@@ -1,6 +1,7 @@
 #ifndef BluetoothManager_H
 #define BluetoothManager_H
 #include "DisplayManager.h"
+#include "JsonParser.h"
 #include "MbedTlsManager.h"
 #include "Network_Manager.h"
 #include "common.h"
@@ -15,6 +16,7 @@ struct tracked_device {
   bool device_tracked;
   bool tracking_status;
 };
+
 void bluetooth_Init();
 
 #endif

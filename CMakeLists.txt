@@ -14,6 +14,8 @@ target_sources(app PRIVATE
   src/Network_Manager/Network_Manager.c
   src/MbedTlsManager/MbedTlsManager.c
   src/NonBlockdelay/NonBlockdelay.c
+  src/waterlevel/waterlevel.c
+  src/JsonParser/JsonParser.c
   src/Pressuresensor/Pressuresensor.c
 
 
@@ -26,6 +28,8 @@ target_include_directories(app PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src/BluetoothManager
   ${CMAKE_CURRENT_SOURCE_DIR}/src/MbedTlsManager
   ${CMAKE_CURRENT_SOURCE_DIR}/src/NonBlockdelay
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/waterlevel
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/JsonParser
   ${CMAKE_CURRENT_SOURCE_DIR}/src/Pressuresensor
 
   # ${CMAKE_CURRENT_SOURCE_DIR}/src/BluetoothManager

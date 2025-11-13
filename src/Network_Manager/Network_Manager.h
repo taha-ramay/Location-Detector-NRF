@@ -3,6 +3,7 @@
 #include "DisplayManager.h"
 #include "NonBlockDelay.h"
 #include "common.h"
+#include "waterlevel.h"
 #include <stdbool.h>
 #include <string.h>
 #include <zephyr/kernel.h>

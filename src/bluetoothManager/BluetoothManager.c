@@ -8,7 +8,7 @@ char addr_str[] = "24:0A:C4:45:88:56";
 
 uint64_t last_time;
 LOG_MODULE_REGISTER(Bluetooth_Debug, LOG_LEVEL_DBG);
-K_THREAD_STACK_DEFINE(range_stack, 1024);
+K_THREAD_STACK_DEFINE(range_stack, 2048);
 static struct k_thread range_thread;
 // struct tracked_device trackedDevices[4];
 struct tracked_device trackedDevices[4] = {0};
@@ -143,13 +143,21 @@ static void scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
       LOG_INF("decryption failed, unknown device");
       return;
     }
+    uint8_t ble__data[3];
+
     for (int i = 0; i < 3; i++) {
       LOG_INF("%d ", bledata[i]);
+      ble__data[i] = bledata[i];
     }
     char addr_str[BT_ADDR_LE_STR_LEN];
     bt_addr_le_to_str(addr, addr_str, sizeof(addr_str));
     LOG_INF("Address: %s ", addr_str);
-    enqueue_data(bledata, 3);
+    char json_buffer[JSon_size];
+
+    EspNodeParser(ble__data, &json_buffer, JSon_size);
+    LOG_INF("JSON: %s\n", json_buffer);
+
+    enqueue_data(json_buffer, strlen(json_buffer));
     k_msleep(5000); // Wait for LCD to power up
 
     // if (buf->len > 1) {
